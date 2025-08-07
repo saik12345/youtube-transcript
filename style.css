@@ -10,7 +10,7 @@ body {
   text-align: center;
   justify-content: left;
   margin-top: 1rem;
-  width: 100vw;
+  width: 100%;
 }
 #logo-img {
   display: flex;
@@ -48,16 +48,17 @@ body {
   border-radius: 0.5rem;
 }
 #linkarea {
-  width: 100%;
+  /* width: 100%; */
   border: 1px solid black;
   padding: 1rem;
+  overflow-x: hidden;
 }
 #linkarea h3 {
   text-align: center;
 }
 #linkarea input {
-  display: inline-block;
-  width: 70%;
+  display: inline;
+  width: 60%;
   height: 2rem;
   padding: 0.2rem;
   box-shadow: 2px 5px 2px;

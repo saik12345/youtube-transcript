@@ -6,8 +6,7 @@ submit.addEventListener("click", async () => {
     return;
   }
   const response = await fetch(
-    `https://youtube-transcript-tct1.vercel.app/api/transcribe
-`,
+    "https://youtube-transcript-tct1.vercel.app/api/transcribe",
     {
       method: "POST",
       headers: {
@@ -18,7 +17,7 @@ submit.addEventListener("click", async () => {
   );
 
   const data = await response.json();
-  const trascript = data?.trascript.replace("/n", " ");
+  const trascript = data?.trascript?.replace("/n", " ");
   const error = data?.error;
   console.log(trascript);
 });

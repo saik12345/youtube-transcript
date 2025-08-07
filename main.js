@@ -17,7 +17,7 @@ submit.addEventListener("click", async () => {
   );
 
   const data = await response.json();
-  const trascript = data?.trascript?.replace("/n", " ");
+  const transcript = data?.transcript?.replace("/\n/g", " ");
   const error = data?.error;
-  console.log(trascript);
+  console.log(transcript);
 });

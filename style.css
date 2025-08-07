@@ -50,7 +50,7 @@ body {
 #linkarea {
   width: 100%;
   border: 1px solid black;
-  padding: 1rem 1.5rem;
+  padding: 1rem;
 }
 #linkarea h3 {
   text-align: center;
@@ -61,7 +61,7 @@ body {
   height: 2rem;
   padding: 0.2rem;
   box-shadow: 2px 5px 2px;
-  margin: 0.5rem auto;
+  margin-left: 0rem;
   font-family: cursive;
 }
 #linkarea button {

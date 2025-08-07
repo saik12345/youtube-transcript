@@ -84,6 +84,8 @@ body {
   color: white;
   padding: 0.5rem 1rem;
   border-radius: 3rem;
+  display: flex;
+  align-items: center;
 }
 #download img {
   height: 1.5rem;

@@ -8,14 +8,15 @@ const download = document.getElementById("download");
 
 let cleanText = "";
 
-function toShortYouTubeURL(url) {
+function toFullYouTubeURL(url) {
+  // Extract the video ID from different possible YouTube URL formats
   const regex =
     /(?:youtube\.com\/(?:watch\?v=|live\/|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
   const match = url.match(regex);
   if (match) {
-    return `https://youtu.be/${match[1]}`;
+    return `https://www.youtube.com/watch?v=${match[1]}`;
   }
-  return null; // or return original URL if no match
+  return null; // or return original url if no match
 }
 
 submit.addEventListener("click", async () => {
@@ -33,7 +34,7 @@ submit.addEventListener("click", async () => {
   }, 2000);
 
   let url = ulink.value;
-  url = toShortYouTubeURL(url);
+  url = toFullYouTubeURL(url);
   if (!url) {
     alert("Something wrong in url");
     return;

@@ -10,6 +10,7 @@ dotenv.config();
 let jobResult = "";
 let rawTranscript = "";
 let updatedFile = "";
+let base64Data = "";
 
 //-----------------------gemini-----------
 
@@ -63,6 +64,7 @@ export default async (req, res) => {
       text: true,
       mode: "auto",
     });
+    console.log(result);
 
     if ("jobId" in result) {
       jobResult = await supadata.transcript.getJobStatus(result.jobId);
@@ -80,11 +82,17 @@ export default async (req, res) => {
     }
 
     if (jobResult.content) {
-      // fs.writeFileSync("transcriptRaw.txt", jobResult.content, "utf-8");
       console.log("Transcript file created");
 
-      const base64Data = Buffer.from(rawTranscript, "utf8").toString("base64");
+      base64Data = Buffer.from(rawTranscript, "utf8").toString("base64");
       updatedFile = await main(base64Data);
+    } else if (result.content) {
+      console.log("Transcript file created");
+
+      base64Data = Buffer.from(result.content, "utf8").toString("base64");
+      updatedFile = await main(base64Data);
+    } else {
+      console.log("error getting data from supadata api");
     }
 
     return res.status(200).json({ transcript: updatedFile || "No content" });

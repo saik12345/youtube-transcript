@@ -2,45 +2,53 @@
 const { Supadata } = require("@supadata/js");
 const fs = require("fs");
 require("dotenv").config();
-const { GoogleGenerativeAI } = require("@google/generative-ai");
-
-// Initialize Gemini API
-const ai = new GoogleGenerativeAI(process.env.gemini_key);
 
 let jobResult = "";
 let rawTranscript = "";
 let updatedFile = "";
 
-// Function to process text with Gemini
-async function main(rawdata) {
-  try {
-    const model = ai.getGenerativeModel({ model: "gemini-2.5-flash" });
+//-----------------------gemini-----------
+import fs from "fs";
+import { GoogleGenAI } from "@google/genai";
 
-    const response = await model.generateContent([
+// Your input text
+const hello = `this colo can would be the best colo .The sentence`;
+fs.writeFileSync("hello.txt", hello, "utf8");
+
+// Convert to Base64
+const base64Data = Buffer.from(hello, "utf8").toString("base64");
+
+// Initialize Gemini API
+const ai = new GoogleGenAI({
+  apiKey: "AIzaSyDG0es8RyWtEe8bSEM9yUHpOXreqy4Qu_w", // never hardcode in production
+});
+
+async function main(base64Data) {
+  const response = await ai.models.generateContent({
+    model: "gemini-2.0-flash", // REQUIRED
+    contents: [
       {
         role: "user",
         parts: [
           {
             inlineData: {
               mimeType: "text/plain",
-              data: rawdata,
+              data: base64Data,
             },
           },
           {
-            text: "provide a clear grammar and rectify only the grammatical errors. Combine every sentence and provide a clean text. Don't change the sentence itself. Don't change any meaning. Don't change the tone, theme, or context. Don't make it sound robotic or AI. Keep it as it is. Don't shorten sentences. Just rectify simple errors here and there. Keep sequence same. At the beginning, provide a small summary section like a gist of what's provided. After that, provide the main text. Carefully follow the instructions.",
+            text: "Provide a clear grammar and rectify only the grammatical errors. Combine every sentence and provide a clean text. Don't change the sentence itself. Don't change any meaning. Don't change the tone, theme, or context. Don't make it sound robotic or AI. Keep it as it is. Don't shorten sentences. Just rectify simple errors here and there. Keep sequence same. At the beginning, provide a small summary section like a gist of what's provided. After that, provide the main text. Carefully follow the instructions.dont use texts like 'Okay, I understand. Here's the corrected version of the text, following your instructions:'.Just simply do as provided. No additional symbols or sentence apart from main content.Give in paragraphs without use of '\n' symbols",
           },
         ],
       },
-    ]);
-
-    return response.response.text();
-  } catch (error) {
-    console.error("Gemini API error:", error);
-    throw error;
-  }
+    ],
+  });
+  const x = response?.candidates[0].content;
+  console.log(response.candidates[0].content);
+  return x;
 }
 
-// API handler
+//------ API handler-------------------
 module.exports = async (req, res) => {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Only POST allowed" });

@@ -1,5 +1,6 @@
 const submit = document.getElementById("submit-link");
 const ulink = document.getElementById("ulink");
+let data = "";
 submit.addEventListener("click", async () => {
   if (ulink.value == "" || ulink.value == null) {
     alert("No link provided");
@@ -16,8 +17,11 @@ submit.addEventListener("click", async () => {
     }
   );
 
-  const data = await response.json();
+  data = await response.json();
+  if (data.error) {
+    alert(data.error);
+    return;
+  }
   const transcript = data?.transcript?.replace("/\n/g", " ");
-  const error = data?.error;
   console.log(transcript);
 });

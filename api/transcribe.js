@@ -1,6 +1,40 @@
 // api/transcribe.js
 const { Supadata } = require("@supadata/js");
+const fs = require("fs");
 require("dotenv").config();
+import { GoogleGenAI } from "@google/genai";
+
+//
+const ai = new GoogleGenAI({ apiKey: process.env.gemini_key });
+
+let jobResult = "";
+let rawFile = null;
+let updatedFile = "";
+
+//
+async function main(rawdata) {
+  const response = await ai.models.generateContent({
+    model: "gemini-2.0-flash",
+    contents: [
+      {
+        role: "user",
+        parts: [
+          {
+            inlineData: {
+              mimeType: "text/plain",
+              data: rawdata,
+            },
+          },
+          {
+            text: "provide a clear grammar and rectify only the grammartical errors.Combine every senntence and provide a clean text.DOnt change the sentence itself.DOnt change any meaning.DOnt change the tone and theme or context. Dont make it sound robotic or ai. Keep as it is.DOnt shorten sentences.Just rectify simple errors here and there. Keep sequence same. At the beginning provide a small summary section like a gist of whats provided. after that provide the main text.Carefully follow the instructions.",
+          },
+        ],
+      },
+    ],
+  });
+  console.log(response.text);
+  return response.text;
+}
 
 module.exports = async (req, res) => {
   if (req.method !== "POST") {
@@ -24,7 +58,7 @@ module.exports = async (req, res) => {
     });
 
     if ("jobId" in result) {
-      const jobResult = await supadata.transcript.getJobStatus(result.jobId);
+      jobResult = await supadata.transcript.getJobStatus(result.jobId);
 
       if (jobResult.status === "completed") {
         return res.status(200).json({ transcript: jobResult.content });
@@ -36,8 +70,18 @@ module.exports = async (req, res) => {
           .json({ message: "Processing", status: jobResult.status });
       }
     }
+    if (jobResult.content) {
+      rawFile = fs.writeFileSync(
+        "transcriptRaw.txt",
+        jobResult.content,
+        "utf-8"
+      );
+      console.log("file created");
+      const base64Data = Buffer.from(rawFile, "utf8").toString("base64");
+      updatedFile = await main(rawFile);
+    }
 
-    return res.status(200).json({ transcript: result.content || "No content" });
+    return res.status(200).json({ transcript: updatedFile || "No content" });
   } catch (err) {
     console.error(err);
     return res.status(500).json({ error: "Server error" });

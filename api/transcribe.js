@@ -44,7 +44,7 @@ async function main(base64Data) {
 }
 
 //------ API handler-------------------
-module.exports = async (req, res) => {
+export default async (req, res) => {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Only POST allowed" });
   }

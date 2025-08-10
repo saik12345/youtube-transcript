@@ -33,7 +33,7 @@ async function main(base64Data) {
             },
           },
           {
-            text: "Provide a clear grammar and rectify only the grammatical errors. Combine every sentence and provide a clean text. Don't change the sentence itself. Don't change any meaning. Don't change the tone, theme, or context. Don't make it sound robotic or AI. Keep it as it is. Don't shorten sentences. Just rectify simple errors here and there. Keep sequence same. At the beginning, provide a small summary section like a gist of what's provided. After that, provide the main text. Carefully follow the instructions.dont use texts like 'Okay, I understand. Here's the corrected version of the text, following your instructions:'.Just simply do as provided. No additional symbols or sentence apart from main content.Give in paragraphs without use of '\n' symbols.Sumaary should have bold heading 'summary'. MAin text must have a bold heading 'Transcript'",
+            text: "Provide a clear grammar and rectify only the grammatical errors. Combine every sentence and provide a clean text. Don't change the sentence itself. Don't change any meaning. Don't change the tone, theme, or context. Don't make it sound robotic or AI. Keep it as it is. Don't shorten sentences. Just rectify simple errors here and there. Keep sequence same. provide the main text. Carefully follow the instructions.dont use texts like 'Okay, I understand. Here's the corrected version of the text, following your instructions:'.Just simply do as provided. No additional symbols or sentence apart from main content.Give in paragraphs without use of '\n' symbols. MAin text must have no headings just the text itself",
           },
         ],
       },

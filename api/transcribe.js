@@ -39,7 +39,7 @@ async function main(base64Data) {
       },
     ],
   });
-  const x = response?.candidates[0].content;
+  const x = response?.candidates[0].content.parts[0].text;
   console.log(response.candidates[0].content.parts[0].text);
   return x;
 }

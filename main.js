@@ -8,6 +8,16 @@ const download = document.getElementById("download");
 
 let cleanText = "";
 
+function toShortYouTubeURL(url) {
+  const regex =
+    /(?:youtube\.com\/(?:watch\?v=|live\/|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+  const match = url.match(regex);
+  if (match) {
+    return `https://youtu.be/${match[1]}`;
+  }
+  return null; // or return original URL if no match
+}
+
 submit.addEventListener("click", async () => {
   if (!ulink.value.trim()) {
     alert("No link provided");
@@ -22,6 +32,13 @@ submit.addEventListener("click", async () => {
     initial.innerHTML = `Getting transcription...`;
   }, 2000);
 
+  let url = ulink.value;
+  url = toShortYouTubeURL(url);
+  if (!url) {
+    alert("Something wrong in url");
+    return;
+  }
+
   try {
     const response = await fetch(
       "https://youtube-transcript-tct1.vercel.app/api/transcribe",
@@ -30,7 +47,7 @@ submit.addEventListener("click", async () => {
         headers: {
           "Content-type": "application/json",
         },
-        body: JSON.stringify({ url: ulink.value }),
+        body: JSON.stringify({ url }),
       }
     );
 

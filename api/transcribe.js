@@ -2,20 +2,21 @@
 const { Supadata } = require("@supadata/js");
 const fs = require("fs");
 require("dotenv").config();
-import { GoogleGenAI } from "@google/genai";
+const { GoogleGenerativeAI } = require("@google/generative-ai");
 
-//
-const ai = new GoogleGenAI({ apiKey: process.env.gemini_key });
+// Initialize Gemini API
+const ai = new GoogleGenerativeAI(process.env.gemini_key);
 
 let jobResult = "";
 let rawTranscript = "";
 let updatedFile = "";
 
-//
+// Function to process text with Gemini
 async function main(rawdata) {
-  const response = await ai.models.generateContent({
-    model: "gemini-2.5-flash",
-    contents: [
+  try {
+    const model = ai.getGenerativeModel({ model: "gemini-2.5-flash" });
+
+    const response = await model.generateContent([
       {
         role: "user",
         parts: [
@@ -26,23 +27,26 @@ async function main(rawdata) {
             },
           },
           {
-            text: "provide a clear grammar and rectify only the grammartical errors.Combine every senntence and provide a clean text.DOnt change the sentence itself.DOnt change any meaning.DOnt change the tone and theme or context. Dont make it sound robotic or ai. Keep as it is.DOnt shorten sentences.Just rectify simple errors here and there. Keep sequence same. At the beginning provide a small summary section like a gist of whats provided. after that provide the main text.Carefully follow the instructions.",
+            text: "provide a clear grammar and rectify only the grammatical errors. Combine every sentence and provide a clean text. Don't change the sentence itself. Don't change any meaning. Don't change the tone, theme, or context. Don't make it sound robotic or AI. Keep it as it is. Don't shorten sentences. Just rectify simple errors here and there. Keep sequence same. At the beginning, provide a small summary section like a gist of what's provided. After that, provide the main text. Carefully follow the instructions.",
           },
         ],
       },
-    ],
-  });
-  console.log(response.text);
-  return response.text;
+    ]);
+
+    return response.response.text();
+  } catch (error) {
+    console.error("Gemini API error:", error);
+    throw error;
+  }
 }
 
+// API handler
 module.exports = async (req, res) => {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Only POST allowed" });
   }
 
   const { url } = req.body;
-
   if (!url) {
     return res.status(400).json({ error: "Missing 'url' in body" });
   }
@@ -57,20 +61,6 @@ module.exports = async (req, res) => {
       mode: "auto",
     });
 
-    //     if ("jobId" in result) {
-    //       jobResult = await supadata.transcript.getJobStatus(result.jobId);
-    //
-    //       if (jobResult.status === "completed") {
-    //         return res.status(200).json({ transcript: jobResult.content });
-    //       } else if (jobResult.status === "failed") {
-    //         return res.status(500).json({ error: jobResult.error });
-    //       } else {
-    //         return res
-    //           .status(202)
-    //           .json({ message: "Processing", status: jobResult.status });
-    //       }
-    //     }
-
     if ("jobId" in result) {
       jobResult = await supadata.transcript.getJobStatus(result.jobId);
 
@@ -79,21 +69,24 @@ module.exports = async (req, res) => {
       } else if (jobResult.status === "failed") {
         return res.status(500).json({ error: jobResult.error });
       } else {
-        return res
-          .status(202)
-          .json({ message: "Processing", status: jobResult.status });
+        return res.status(202).json({
+          message: "Processing",
+          status: jobResult.status,
+        });
       }
     }
+
     if (jobResult.content) {
       fs.writeFileSync("transcriptRaw.txt", jobResult.content, "utf-8");
-      console.log("file created");
+      console.log("Transcript file created");
+
       const base64Data = Buffer.from(rawTranscript, "utf8").toString("base64");
       updatedFile = await main(base64Data);
     }
 
     return res.status(200).json({ transcript: updatedFile || "No content" });
   } catch (err) {
-    console.error(err);
+    console.error("Server error:", err);
     return res.status(500).json({ error: "Server error" });
   }
 };

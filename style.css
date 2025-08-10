@@ -19,7 +19,7 @@ body {
   align-items: center;
   gap: 1rem;
   width: 40%;
-  border: 1px solid black;
+  /* border: 1px solid black; */
 }
 #logo-img img {
   width: 3.5rem;
@@ -31,7 +31,7 @@ body {
   justify-content: center;
   width: 60%;
   padding: 1rem;
-  border: 1px solid black;
+  /* border: 1px solid black; */
 }
 #logo h1 {
   text-align: center;
@@ -49,7 +49,7 @@ body {
 }
 #linkarea {
   /* width: 100%; */
-  border: 1px solid black;
+  /* border: 1px solid black; */
   padding: 1rem;
   overflow-x: hidden;
 }

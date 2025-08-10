@@ -6,6 +6,7 @@
     <title>Transcript PDF</title>
     <link rel="stylesheet" href="style.css" />
     <script src="main.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   </head>
   <body>
     <div>
@@ -33,8 +34,10 @@
         </div>
       </div>
       <div id="pdf-area">
-        <div id="preview">preview content</div>
-        <div id="download"><img src="pdf.png" />Download PDF</div>
+        <div id="download">
+          <img src="pdf.png" /><span id="initial"> Submit a link </span>
+        </div>
+        <div id="preview">Transcript will be displayed here...</div>
       </div>
     </div>
   </body>

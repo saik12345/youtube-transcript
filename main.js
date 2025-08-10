@@ -100,7 +100,7 @@ submit.addEventListener("click", async () => {
       .replace(/\s{2,}/g, " ") // remove extra spaces
       .trim();
 
-    preview.innerHTML = cleanText;
+    preview.innerHTML = `<h1>Transcript</h1> ${cleanText}`;
     initial.innerHTML = "Download Ready";
   } catch (err) {
     console.error(err);

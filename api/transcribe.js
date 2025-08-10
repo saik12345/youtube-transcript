@@ -1,22 +1,17 @@
 // api/transcribe.js
-const { Supadata } = require("@supadata/js");
-const fs = require("fs");
-require("dotenv").config();
+import { Supadata } from "@supadata/js";
+// const fs = require("fs");
+import fs from "fs";
+import { GoogleGenAI } from "@google/genai";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 let jobResult = "";
 let rawTranscript = "";
 let updatedFile = "";
 
 //-----------------------gemini-----------
-import fs from "fs";
-import { GoogleGenAI } from "@google/genai";
-
-// Your input text
-const hello = `this colo can would be the best colo .The sentence`;
-fs.writeFileSync("hello.txt", hello, "utf8");
-
-// Convert to Base64
-const base64Data = Buffer.from(hello, "utf8").toString("base64");
 
 // Initialize Gemini API
 const ai = new GoogleGenAI({
@@ -85,7 +80,7 @@ module.exports = async (req, res) => {
     }
 
     if (jobResult.content) {
-      fs.writeFileSync("transcriptRaw.txt", jobResult.content, "utf-8");
+      // fs.writeFileSync("transcriptRaw.txt", jobResult.content, "utf-8");
       console.log("Transcript file created");
 
       const base64Data = Buffer.from(rawTranscript, "utf8").toString("base64");

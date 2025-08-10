@@ -8,7 +8,7 @@ import { GoogleGenAI } from "@google/genai";
 const ai = new GoogleGenAI({ apiKey: process.env.gemini_key });
 
 let jobResult = "";
-let rawFile = null;
+let rawTranscript = "";
 let updatedFile = "";
 
 //
@@ -57,11 +57,25 @@ module.exports = async (req, res) => {
       mode: "auto",
     });
 
+    //     if ("jobId" in result) {
+    //       jobResult = await supadata.transcript.getJobStatus(result.jobId);
+    //
+    //       if (jobResult.status === "completed") {
+    //         return res.status(200).json({ transcript: jobResult.content });
+    //       } else if (jobResult.status === "failed") {
+    //         return res.status(500).json({ error: jobResult.error });
+    //       } else {
+    //         return res
+    //           .status(202)
+    //           .json({ message: "Processing", status: jobResult.status });
+    //       }
+    //     }
+
     if ("jobId" in result) {
       jobResult = await supadata.transcript.getJobStatus(result.jobId);
 
       if (jobResult.status === "completed") {
-        return res.status(200).json({ transcript: jobResult.content });
+        rawTranscript = jobResult.content;
       } else if (jobResult.status === "failed") {
         return res.status(500).json({ error: jobResult.error });
       } else {
@@ -71,14 +85,10 @@ module.exports = async (req, res) => {
       }
     }
     if (jobResult.content) {
-      rawFile = fs.writeFileSync(
-        "transcriptRaw.txt",
-        jobResult.content,
-        "utf-8"
-      );
+      fs.writeFileSync("transcriptRaw.txt", jobResult.content, "utf-8");
       console.log("file created");
-      const base64Data = Buffer.from(rawFile, "utf8").toString("base64");
-      updatedFile = await main(rawFile);
+      const base64Data = Buffer.from(rawTranscript, "utf8").toString("base64");
+      updatedFile = await main(base64Data);
     }
 
     return res.status(200).json({ transcript: updatedFile || "No content" });

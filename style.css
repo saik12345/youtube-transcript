@@ -80,16 +80,19 @@ body {
   justify-content: center;
   gap: 1rem;
   margin-top: 2rem;
+  align-items: center;
 }
 #preview {
   width: 90%;
   border: 1px solid black;
+  padding: 0.5rem;
+  line-height: 1.6;
   margin: 1rem auto;
   overflow: auto;
   background-color: white;
   color: black;
   font-size: medium;
-  font-family: "Times New Roman", Times, serif;
+  font-family: "Georgia", "Times New Roman", Times, serif;
 }
 #download {
   background-color: black;

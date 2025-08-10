@@ -18,10 +18,11 @@ submit.addEventListener("click", async () => {
   );
 
   data = await response.json();
+  console.log(data);
   if (data.error) {
     alert(data.error);
     return;
   }
-  const transcript = data?.transcript?.replace("/\n/g", " ");
-  console.log(transcript);
+  // const transcript = data?.transcript?.replace("/\n/g", " ");
+  // console.log(transcript);
 });

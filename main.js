@@ -16,8 +16,7 @@ async function correctTextWithGemini(text) {
 
   // The Gemini API requires content to be passed in a specific format.
   const model = ai.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
-  const prompt =
-    "Fix only grammatical errors without changing meaning, tone, theme, or context. Keep sentence order and wording the same, and do not shorten text. Avoid making it sound robotic or AI-generated. Merge sentences into clean paragraphs. Output only the complete corrected text, with no headings, introductions, or extra symbols.";
+  const prompt = "Fix only grammatical errors without changing meaning, tone, theme, or context. Keep sentence order and wording the same, and do not shorten text. Avoid making it sound robotic or AI-generated. Merge sentences into clean paragraphs. Output only the complete corrected text, with no headings, introductions, or extra symbols.";
 
   try {
     const result = await model.generateContent([text, prompt]);
@@ -46,7 +45,7 @@ async function pollJobStatus(jobId) {
       throw new Error(jobResult.error || "Supadata transcription job failed.");
     }
     // Wait for 5 seconds before the next poll to avoid overwhelming the API
-    await new Promise((resolve) => setTimeout(resolve, 5000));
+    await new Promise(resolve => setTimeout(resolve, 5000));
   }
 }
 
@@ -58,9 +57,7 @@ export default async (req, res) => {
 
   const { url } = req.body;
   if (!url) {
-    return res
-      .status(400)
-      .json({ error: "Missing required 'url' in the request body." });
+    return res.status(400).json({ error: "Missing required 'url' in the request body." });
   }
 
   try {
@@ -87,23 +84,22 @@ export default async (req, res) => {
     }
 
     if (!rawTranscript) {
-      return res
-        .status(200)
-        .json({ transcript: "Source contained no audible content." });
+      return res.status(200).json({ transcript: "Source contained no audible content." });
     }
 
     // Correct the transcript using Gemini
     const correctedTranscript = await correctTextWithGemini(rawTranscript);
     if (!correctedTranscript) {
-      // If Gemini fails, we can choose to return the raw transcript as a fallback
-      console.warn("Gemini correction failed. Returning raw transcript.");
-      return res.status(200).json({
-        message: "Grammar correction failed; returning raw transcript.",
-        transcript: rawTranscript,
-      });
+        // If Gemini fails, we can choose to return the raw transcript as a fallback
+        console.warn("Gemini correction failed. Returning raw transcript.");
+        return res.status(200).json({ 
+            message: "Grammar correction failed; returning raw transcript.",
+            transcript: rawTranscript 
+        });
     }
 
     return res.status(200).json({ transcript: correctedTranscript });
+
   } catch (err) {
     console.error("Server error:", err);
     return res.status(500).json({ error: `Server error: ${err.message}` });

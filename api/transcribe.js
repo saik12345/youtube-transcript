@@ -1,108 +1,111 @@
 // api/transcribe.js
 import { Supadata } from "@supadata/js";
-// const fs = require("fs");
-import fs from "fs";
 import { GoogleGenAI } from "@google/genai";
-import dotenv from "dotenv";
 
-// dotenv.config();
+// Initialize APIs using environment variables for security
+const supadata = new Supadata({ apiKey: process.env.supadata_key });
+const ai = new GoogleGenAI({ apiKey: process.env.gemini_key });
 
-let jobResult = "";
-let rawTranscript = "";
-let updatedFile = "";
-let base64Data = "";
+/**
+ * Corrects grammar in a text using the Gemini API.
+ * @param {string} text - The raw text to correct.
+ * @returns {Promise<string|null>} The corrected text, or null if an error occurs.
+ */
+async function correctTextWithGemini(text) {
+  if (!text) return null;
 
-//-----------------------gemini-----------
+  // The Gemini API requires content to be passed in a specific format.
+  const model = ai.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
+  const prompt =
+    "Fix only grammatical errors without changing meaning, tone, theme, or context. Keep sentence order and wording the same, and do not shorten text. Avoid making it sound robotic or AI-generated. Merge sentences into clean paragraphs. Output only the complete corrected text, with no headings, introductions, or extra symbols.";
 
-// Initialize Gemini API
-const ai = new GoogleGenAI({
-  apiKey: "AIzaSyDG0es8RyWtEe8bSEM9yUHpOXreqy4Qu_w", // never hardcode in production
-});
-
-async function main(base64Data) {
-  const response = await ai.models.generateContent({
-    model: "gemini-2.0-flash", // REQUIRED
-    contents: [
-      {
-        role: "user",
-        parts: [
-          {
-            inlineData: {
-              mimeType: "text/plain",
-              data: base64Data,
-            },
-          },
-          {
-            text: "Fix only grammatical errors without changing meaning, tone, theme, or context. Keep sentence order and wording the same, and do not shorten text. Avoid making it sound robotic or AI-generated. Merge sentences into clean paragraphs without '\n' symbols. Output the complete corrected text in full without cutting off or breaking in between, with no headings, introductions, or extra symbols.",
-          },
-        ],
-      },
-    ],
-  });
-
-  if (error in response) {
-    return response.error.message;
+  try {
+    const result = await model.generateContent([text, prompt]);
+    const response = result.response;
+    return response.text();
+  } catch (error) {
+    console.error("Error calling Gemini API:", error);
+    return null; // Gracefully handle the error
   }
-
-  const x = response?.candidates[0].content.parts[0].text;
-  console.log(response.candidates[0].content.parts[0].text);
-  return x;
 }
 
-//------ API handler-------------------
+/**
+ * Polls the Supadata job status until it is completed or failed.
+ * @param {string} jobId - The ID of the transcription job.
+ * @returns {Promise<object>} The final job result object.
+ * @throws {Error} If the job fails.
+ */
+async function pollJobStatus(jobId) {
+  while (true) {
+    const jobResult = await supadata.transcript.getJobStatus(jobId);
+
+    if (jobResult.status === "completed") {
+      return jobResult;
+    }
+    if (jobResult.status === "failed") {
+      throw new Error(jobResult.error || "Supadata transcription job failed.");
+    }
+    // Wait for 5 seconds before the next poll to avoid overwhelming the API
+    await new Promise((resolve) => setTimeout(resolve, 5000));
+  }
+}
+
+// --- API Handler ---
 export default async (req, res) => {
   if (req.method !== "POST") {
-    return res.status(405).json({ error: "Only POST allowed" });
+    return res.status(405).json({ error: "Only POST requests are allowed." });
   }
 
   const { url } = req.body;
   if (!url) {
-    return res.status(400).json({ error: "Missing 'url' in body" });
+    return res
+      .status(400)
+      .json({ error: "Missing required 'url' in the request body." });
   }
 
-  const supadata = new Supadata({ apiKey: process.env.supadata_key });
-
   try {
-    const result = await supadata.transcript({
+    let rawTranscript = "";
+
+    // Start the transcription job
+    const initialResult = await supadata.transcript({
       url,
       lang: "en",
       text: true,
-      mode: "auto",
     });
-    console.log(result);
 
-    if ("jobId" in result) {
-      jobResult = await supadata.transcript.getJobStatus(result.jobId);
-
-      if (jobResult.status === "completed") {
-        rawTranscript = jobResult.content;
-      } else if (jobResult.status === "failed") {
-        return res.status(500).json({ error: jobResult.error });
-      } else {
-        return res.status(202).json({
-          message: "Processing",
-          status: jobResult.status,
-        });
-      }
-    }
-
-    if (jobResult.content) {
-      console.log("Transcript file created");
-
-      base64Data = Buffer.from(rawTranscript, "utf8").toString("base64");
-      updatedFile = await main(base64Data);
-    } else if (result.content) {
-      console.log("Transcript file created");
-
-      base64Data = Buffer.from(result.content, "utf8").toString("base64");
-      updatedFile = await main(base64Data);
+    // Handle both synchronous (immediate) and asynchronous (jobId) results
+    if (initialResult.content) {
+      // Transcription was fast and completed immediately
+      rawTranscript = initialResult.content;
+    } else if (initialResult.jobId) {
+      // Transcription is running in the background, so we poll for the result
+      console.log(`Polling for job ID: ${initialResult.jobId}`);
+      const finalResult = await pollJobStatus(initialResult.jobId);
+      rawTranscript = finalResult.content;
     } else {
-      console.log("error getting data from supadata api");
+      throw new Error("Failed to retrieve transcript from Supadata.");
     }
 
-    return res.status(200).json({ transcript: updatedFile || "No content" });
+    if (!rawTranscript) {
+      return res
+        .status(200)
+        .json({ transcript: "Source contained no audible content." });
+    }
+
+    // Correct the transcript using Gemini
+    const correctedTranscript = await correctTextWithGemini(rawTranscript);
+    if (!correctedTranscript) {
+      // If Gemini fails, we can choose to return the raw transcript as a fallback
+      console.warn("Gemini correction failed. Returning raw transcript.");
+      return res.status(200).json({
+        message: "Grammar correction failed; returning raw transcript.",
+        transcript: rawTranscript,
+      });
+    }
+
+    return res.status(200).json({ transcript: correctedTranscript });
   } catch (err) {
     console.error("Server error:", err);
-    return res.status(500).json({ error: `Server error: ${err}` });
+    return res.status(500).json({ error: `Server error: ${err.message}` });
   }
 };

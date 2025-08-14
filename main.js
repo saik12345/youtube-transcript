@@ -12,8 +12,25 @@ const loader1 = document.getElementById("loader1");
 const loader2 = document.getElementById("loader2");
 
 //---------------------------------------------
+// ulink.addEventListener("input", () => {
+//   if (!ulink.value) {
+//     rawPreview.textContent = "Transcript will be displayed here....";
+//     aiPreview.textContent = "Transcript will be displayed here....";
+//   }
+// });
+
+// rawArea.setAttribute("disabled");
+downloadAiTranscript.classList.add("disabled-class");
+downloadRawTranscript.classList.add("disabled-class");
 
 submitLink.addEventListener("click", async () => {
+  downloadRawTranscript.classList.add("disabled-class");
+  rawPreview.textContent = "Transcript will be displayed here....";
+  aiPreview.textContent = "Transcript will be displayed here....";
+  rawArea.textContent = "NO pdf yet..";
+  aiArea.textContent = "NO pdf yet..";
+  // rawArea.setAttribute("disabled");
+  // aiArea.setAttribute("disabled");
   console.log(ulink.value);
   if (!ulink.value) {
     alert("No link provided");
@@ -44,6 +61,7 @@ submitLink.addEventListener("click", async () => {
 
   if (response.status === "completed") {
     loader1.setAttribute("hidden", true);
+    downloadRawTranscript.classList.remove("disabled-class");
     rawArea.innerHTML = "Download ready";
     rawPreview.innerHTML = `${response?.transcript}`;
   }
@@ -69,7 +87,7 @@ submitLink.addEventListener("click", async () => {
       a.href = url;
 
       // Filename
-      a.download = `${new Date()
+      a.download = `RawTranscript-${new Date()
         .toLocaleDateString("en-GB")
         .replace(/\//g, "-")}.pdf`;
       document.body.appendChild(a);
@@ -84,6 +102,8 @@ submitLink.addEventListener("click", async () => {
 
 improve.addEventListener("click", async () => {
   loader2.removeAttribute("hidden");
+  aiArea.textContent = "NO pdf yet..";
+  aiPreview.textContent = "Transcript will be displayed here..";
   const data = await fetch(
     "https://transcript-backend-mwnc.onrender.com/aitranscript",
     {
@@ -108,7 +128,9 @@ improve.addEventListener("click", async () => {
 
   if (response.status === "completed") {
     loader2.setAttribute("hidden", true);
+
     aiArea.innerHTML = "Download Ready";
+    downloadAiTranscript.classList.remove("disabled-class");
     aiPreview.innerHTML = `${response?.transcript}`;
 
     downloadAiTranscript.addEventListener("click", async () => {
@@ -133,7 +155,7 @@ improve.addEventListener("click", async () => {
         a.href = url;
 
         // Filename
-        a.download = `${new Date()
+        a.download = `AItranscript-${new Date()
           .toLocaleDateString("en-GB")
           .replace(/\//g, "-")}.pdf`;
         document.body.appendChild(a);

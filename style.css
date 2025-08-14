@@ -165,3 +165,10 @@ body {
     transform: rotate(360deg);
   }
 }
+.disabled-class {
+  pointer-events: none;
+  cursor: not-allowed;
+  opacity: 0.5;
+  user-select: none;
+  display: inline-block;
+}

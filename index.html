@@ -34,10 +34,67 @@
         </div>
       </div>
       <div id="pdf-area">
-        <div id="download">
-          <img src="pdf.png" /><span id="initial"> Submit a link </span>
+        <div style="width: 100%; margin-top: 1rem">
+          <p
+            style="
+              width: 90%;
+              display: flex;
+              justify-content: space-between;
+              margin: 1rem auto;
+            "
+          >
+            <span
+              style="
+                background-color: black;
+                color: white;
+                padding: 0.5rem 1rem;
+                border-radius: 1.5rem;
+                font-size: small;
+                max-height: fit-content;
+              "
+              >Raw Transcript</span
+            >
+            <span id="download-rawtranscript">
+              <img src="pdf.png" /><span id="initial-raw">NO pdf yet..</span>
+            </span>
+            <span style="display: flex; align-items: center" id="raw-group">
+              <button class="util">+</button>
+              <button class="util">-</button>
+            </span>
+          </p>
+          <div id="preview-raw">Transcript will be displayed here...</div>
         </div>
-        <div id="preview">Transcript will be displayed here...</div>
+        <p id="convert"><button id="ai">Improve with ai</button></p>
+        <div style="width: 100%; margin-top: 1rem">
+          <p
+            style="
+              width: 90%;
+              display: flex;
+              justify-content: space-between;
+              margin: 1rem auto;
+            "
+          >
+            <span
+              style="
+                background-color: black;
+                color: white;
+                padding: 0.5rem 1rem;
+                border-radius: 1.5rem;
+                font-size: small;
+                max-height: fit-content;
+              "
+              >AI Transcript</span
+            >
+            <span id="download-aitranscript">
+              <img src="pdf.png" /><span id="initial-ai">NO pdf yet..</span>
+            </span>
+            <span style="display: flex; align-items: center" id="ai-group">
+              <button class="util">+</button>
+              <button class="util">-</button>
+            </span>
+          </p>
+          <div id="preview-ai">Transcript will be displayed here...</div>
+        </div>
       </div>
     </div>
   </body>

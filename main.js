@@ -1,107 +1,137 @@
-// api/transcribe.js
-import { Supadata } from "@supadata/js";
-import { GoogleGenAI } from "@google/genai";
+const ulink = document.getElementById("ulink");
+const submitLink = document.getElementById("submit-link");
+const rawPreview = document.getElementById("preview-raw");
+const aiPreview = document.getElementById("preview-ai");
+const rawArea = document.getElementById("initial-raw");
+const aiArea = document.getElementById("initial-ai");
+const downloadRawTranscript = document.getElementById("download-rawtranscript");
+const downloadAiTranscript = document.getElementById("download-aitranscript");
+const improve = document.getElementById("ai");
+//---------------------------------------------
 
-// Initialize APIs using environment variables for security
-const supadata = new Supadata({ apiKey: process.env.SUPADATA_KEY });
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-
-/**
- * Corrects grammar in a text using the Gemini API.
- * @param {string} text - The raw text to correct.
- * @returns {Promise<string|null>} The corrected text, or null if an error occurs.
- */
-async function correctTextWithGemini(text) {
-  if (!text) return null;
-
-  // The Gemini API requires content to be passed in a specific format.
-  const model = ai.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
-  const prompt = "Fix only grammatical errors without changing meaning, tone, theme, or context. Keep sentence order and wording the same, and do not shorten text. Avoid making it sound robotic or AI-generated. Merge sentences into clean paragraphs. Output only the complete corrected text, with no headings, introductions, or extra symbols.";
-
-  try {
-    const result = await model.generateContent([text, prompt]);
-    const response = result.response;
-    return response.text();
-  } catch (error) {
-    console.error("Error calling Gemini API:", error);
-    return null; // Gracefully handle the error
+submitLink.addEventListener("click", async () => {
+  console.log(ulink.value);
+  if (!ulink.value) {
+    alert("No link provided");
+    return;
   }
-}
-
-/**
- * Polls the Supadata job status until it is completed or failed.
- * @param {string} jobId - The ID of the transcription job.
- * @returns {Promise<object>} The final job result object.
- * @throws {Error} If the job fails.
- */
-async function pollJobStatus(jobId) {
-  while (true) {
-    const jobResult = await supadata.transcript.getJobStatus(jobId);
-
-    if (jobResult.status === "completed") {
-      return jobResult;
+  const data = await fetch(
+    "https://transcript-backend-mwnc.onrender.com/getTranscription",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        reqUrl: ulink.value,
+      }),
     }
-    if (jobResult.status === "failed") {
-      throw new Error(jobResult.error || "Supadata transcription job failed.");
+  );
+  const response = await data.json();
+  if (response?.status === "failed" || response?.status === "error") {
+    alert(`${response.message}`);
+    return;
+  }
+  console.log(response);
+
+  rawPreview.innerHTML = `${response?.transcript}`;
+
+  if (response.status === "completed") {
+    rawArea.innerHTML = "Download ready";
+  }
+  downloadRawTranscript.addEventListener("click", async () => {
+    if (response.status === "completed") {
+      const pdfres = await fetch(
+        "https://transcript-backend-mwnc.onrender.com/getpdf",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            text: response.transcript,
+          }),
+        }
+      );
+      const blob = await pdfres.blob();
+
+      // Create a download link
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+
+      // Filename
+      a.download = `${new Date()
+        .toLocaleDateString("en-GB")
+        .replace(/\//g, "-")}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+
+      // Clean up
+      a.remove();
+      window.URL.revokeObjectURL(url);
     }
-    // Wait for 5 seconds before the next poll to avoid overwhelming the API
-    await new Promise(resolve => setTimeout(resolve, 5000));
+  });
+});
+
+improve.addEventListener("click", async () => {
+  const data = await fetch(
+    "https://transcript-backend-mwnc.onrender.com/aitranscript",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        text: rawPreview.textContent,
+      }),
+    }
+  );
+
+  const response = await data.json();
+  console.log(response);
+
+  if (response.status === "error") {
+    alert(`Some error occured with ai. ${response?.message}`);
+    return;
   }
-}
 
-// --- API Handler ---
-export default async (req, res) => {
-  if (req.method !== "POST") {
-    return res.status(405).json({ error: "Only POST requests are allowed." });
-  }
+  if (response.status === "completed") {
+    aiArea.innerHTML = "Download Ready";
+    aiPreview.innerHTML = `${response?.transcript}`;
 
-  const { url } = req.body;
-  if (!url) {
-    return res.status(400).json({ error: "Missing required 'url' in the request body." });
-  }
+    downloadAiTranscript.addEventListener("click", async () => {
+      if (response.status === "completed") {
+        const pdfres = await fetch(
+          "https://transcript-backend-mwnc.onrender.com/getpdf",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              text: response.transcript,
+            }),
+          }
+        );
+        const blob = await pdfres.blob();
 
-  try {
-    let rawTranscript = "";
+        // Create a download link
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
 
-    // Start the transcription job
-    const initialResult = await supadata.transcript({
-      url,
-      lang: "en",
-      text: true,
+        // Filename
+        a.download = `${new Date()
+          .toLocaleDateString("en-GB")
+          .replace(/\//g, "-")}.pdf`;
+        document.body.appendChild(a);
+        a.click();
+
+        // Clean up
+        a.remove();
+        window.URL.revokeObjectURL(url);
+      }
     });
-
-    // Handle both synchronous (immediate) and asynchronous (jobId) results
-    if (initialResult.content) {
-      // Transcription was fast and completed immediately
-      rawTranscript = initialResult.content;
-    } else if (initialResult.jobId) {
-      // Transcription is running in the background, so we poll for the result
-      console.log(`Polling for job ID: ${initialResult.jobId}`);
-      const finalResult = await pollJobStatus(initialResult.jobId);
-      rawTranscript = finalResult.content;
-    } else {
-      throw new Error("Failed to retrieve transcript from Supadata.");
-    }
-
-    if (!rawTranscript) {
-      return res.status(200).json({ transcript: "Source contained no audible content." });
-    }
-
-    // Correct the transcript using Gemini
-    const correctedTranscript = await correctTextWithGemini(rawTranscript);
-    if (!correctedTranscript) {
-        // If Gemini fails, we can choose to return the raw transcript as a fallback
-        console.warn("Gemini correction failed. Returning raw transcript.");
-        return res.status(200).json({ 
-            message: "Grammar correction failed; returning raw transcript.",
-            transcript: rawTranscript 
-        });
-    }
-
-    return res.status(200).json({ transcript: correctedTranscript });
-
-  } catch (err) {
-    console.error("Server error:", err);
-    return res.status(500).json({ error: `Server error: ${err.message}` });
   }
-};
+});

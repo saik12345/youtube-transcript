@@ -155,6 +155,7 @@ improve.addEventListener("click", async () => {
 
   downloadAiTranscript.addEventListener("click", async () => {
     // if (response.status === "completed") {
+    console.log("clicked to get aitranscript");
     const pdfres = await fetch(
       "https://transcript-backend-mwnc.onrender.com/getpdf",
       {

@@ -151,39 +151,39 @@ improve.addEventListener("click", async () => {
     aiArea.innerHTML = "Download Ready";
     downloadAiTranscript.classList.remove("disabled-class");
     // aiPreview.innerHTML = `${response?.transcript}`;
-
-    downloadAiTranscript.addEventListener("click", async () => {
-      if (response.status === "completed") {
-        const pdfres = await fetch(
-          "https://transcript-backend-mwnc.onrender.com/getpdf",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              text: aiPreview.textContent,
-            }),
-          }
-        );
-        const blob = await pdfres.blob();
-
-        // Create a download link
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-
-        // Filename
-        a.download = `AItranscript-${new Date()
-          .toLocaleDateString("en-GB")
-          .replace(/\//g, "-")}.pdf`;
-        document.body.appendChild(a);
-        a.click();
-
-        // Clean up
-        a.remove();
-        window.URL.revokeObjectURL(url);
-      }
-    });
   }
+
+  downloadAiTranscript.addEventListener("click", async () => {
+    if (response.status === "completed") {
+      const pdfres = await fetch(
+        "https://transcript-backend-mwnc.onrender.com/getpdf",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            text: aiPreview.textContent,
+          }),
+        }
+      );
+      const blob = await pdfres.blob();
+
+      // Create a download link
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+
+      // Filename
+      a.download = `AItranscript-${new Date()
+        .toLocaleDateString("en-GB")
+        .replace(/\//g, "-")}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+
+      // Clean up
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    }
+  });
 });

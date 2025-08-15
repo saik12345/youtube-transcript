@@ -162,7 +162,7 @@ improve.addEventListener("click", async () => {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              text: response.transcript,
+              text: aiPreview.textContent,
             }),
           }
         );

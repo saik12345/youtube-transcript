@@ -104,8 +104,8 @@ improve.addEventListener("click", async () => {
   loader2.removeAttribute("hidden");
   aiArea.textContent = "NO pdf yet..";
   aiPreview.textContent = "Transcript will be displayed here..";
-  const data = await fetch(
-    "https://transcript-backend-mwnc.onrender.com/aitranscript",
+  const response = await fetch(
+    "https://transcript-backend-mwnc.onrender.com/streamaitranscript",
     {
       method: "POST",
       headers: {
@@ -117,8 +117,27 @@ improve.addEventListener("click", async () => {
     }
   );
 
-  const response = await data.json();
-  console.log(response);
+  if (!response.ok || !response.body) {
+    throw new Error("AI service failed to respond properly.");
+  } else {
+    aiPreview.textContent = "";
+  }
+  // const response = await data.json();
+  // console.log(response);
+
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder("utf-8");
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) {
+      loader2.setAttribute("hidden", true);
+      aiArea.innerHTML = "Download Ready";
+      downloadAiTranscript.classList.remove("disabled-class");
+      break;
+    }
+    aiPreview.textContent += decoder.decode(value, { stream: true });
+  }
 
   if (response.status === "error") {
     loader2.setAttribute("hidden", true);
@@ -131,7 +150,7 @@ improve.addEventListener("click", async () => {
 
     aiArea.innerHTML = "Download Ready";
     downloadAiTranscript.classList.remove("disabled-class");
-    aiPreview.innerHTML = `${response?.transcript}`;
+    // aiPreview.innerHTML = `${response?.transcript}`;
 
     downloadAiTranscript.addEventListener("click", async () => {
       if (response.status === "completed") {

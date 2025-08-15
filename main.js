@@ -154,36 +154,36 @@ improve.addEventListener("click", async () => {
   }
 
   downloadAiTranscript.addEventListener("click", async () => {
-    if (response.status === "completed") {
-      const pdfres = await fetch(
-        "https://transcript-backend-mwnc.onrender.com/getpdf",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            text: aiPreview.textContent,
-          }),
-        }
-      );
-      const blob = await pdfres.blob();
+    // if (response.status === "completed") {
+    const pdfres = await fetch(
+      "https://transcript-backend-mwnc.onrender.com/getpdf",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          text: aiPreview.textContent,
+        }),
+      }
+    );
+    const blob = await pdfres.blob();
 
-      // Create a download link
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
+    // Create a download link
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
 
-      // Filename
-      a.download = `AItranscript-${new Date()
-        .toLocaleDateString("en-GB")
-        .replace(/\//g, "-")}.pdf`;
-      document.body.appendChild(a);
-      a.click();
+    // Filename
+    a.download = `AItranscript-${new Date()
+      .toLocaleDateString("en-GB")
+      .replace(/\//g, "-")}.pdf`;
+    document.body.appendChild(a);
+    a.click();
 
-      // Clean up
-      a.remove();
-      window.URL.revokeObjectURL(url);
-    }
+    // Clean up
+    a.remove();
+    window.URL.revokeObjectURL(url);
+    // }
   });
 });

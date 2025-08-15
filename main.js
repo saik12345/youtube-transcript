@@ -12,12 +12,12 @@ const loader1 = document.getElementById("loader1");
 const loader2 = document.getElementById("loader2");
 
 //---------------------------------------------
-// ulink.addEventListener("input", () => {
-//   if (!ulink.value) {
-//     rawPreview.textContent = "Transcript will be displayed here....";
-//     aiPreview.textContent = "Transcript will be displayed here....";
-//   }
-// });
+ulink.addEventListener("input", () => {
+  if (!ulink.value) {
+    rawPreview.textContent = "Transcript will be displayed here....";
+    aiPreview.textContent = "Transcript will be displayed here....";
+  }
+});
 
 // rawArea.setAttribute("disabled");
 downloadAiTranscript.classList.add("disabled-class");

@@ -171,3 +171,23 @@ body {
   user-select: none;
   display: inline-block;
 }
+.zoom {
+  position: fixed; /* Stay fixed on screen */
+  top: 50%; /* Center vertically */
+  left: 50%; /* Center horizontally */
+  transform: translate(-50%, -50%); /* Perfect centering */
+  z-index: 1000; /* On top of everything */
+
+  width: 80%; /* Take most of the width */
+  height: 100%; /* Take most of the height */
+
+  background: white; /* Or transparent if it’s an image */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); /* Nice shadow */
+  border-radius: 12px;
+  padding: 0.5rem 1rem;
+  /* Rounded corners */
+  /* overflow-y: auto; */
+  /* display: flex; Optional: center contents */
+  /* align-items: center;
+  justify-content: center; */
+}

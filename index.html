@@ -142,12 +142,28 @@
             <span id="download-rawtranscript">
               <img src="pdf.png" /><span id="initial-raw">NO pdf yet..</span>
             </span>
-            <span style="display: flex; align-items: center" id="raw-group">
+            <!-- <span style="display: flex; align-items: center" id="raw-group">
               <button class="util">+</button>
               <button class="util">-</button>
-            </span>
+            </span> -->
           </p>
-          <div id="preview-raw">Transcript will be displayed here...</div>
+          <div id="raw-full" style="width: 100%; padding: 0.5rem">
+            <p
+              style="
+                /* border: 1px solid black; */
+                display: flex;
+                justify-content: right;
+                width: 90%;
+                margin: 0.1rem auto;
+              "
+            >
+              <span style="display: flex; align-items: center" id="raw-group">
+                <button class="util" id="raw-max">+</button>
+                <!-- <button class="util" id="raw-min">-</button> -->
+              </span>
+            </p>
+            <div id="preview-raw">Transcript will be displayed here...</div>
+          </div>
         </div>
         <p id="convert"><button id="ai">Improve with ai</button></p>
         <div style="width: 100%; margin-top: 1rem">
@@ -174,12 +190,25 @@
             <span id="download-aitranscript">
               <img src="pdf.png" /><span id="initial-ai">NO pdf yet..</span>
             </span>
-            <span style="display: flex; align-items: center" id="ai-group">
-              <button class="util">+</button>
-              <button class="util">-</button>
-            </span>
           </p>
-          <div id="preview-ai">Transcript will be displayed here...</div>
+          <div id="ai-full" style="width: 100%; padding: 0.5rem">
+            <p
+              style="
+                /* border: 1px solid black; */
+                display: flex;
+                justify-content: right;
+                width: 90%;
+                margin: 0.1rem auto;
+              "
+              id="btn-ai"
+            >
+              <span style="display: flex; align-items: center" id="ai-group">
+                <button class="util" id="ai-max">+</button>
+                <!-- <button class="util" id="raw-min">-</button> -->
+              </span>
+            </p>
+            <div id="preview-ai">Transcript will be displayed here...</div>
+          </div>
         </div>
       </div>
     </div>

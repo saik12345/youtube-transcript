@@ -11,6 +11,55 @@ const improve = document.getElementById("ai");
 const loader1 = document.getElementById("loader1");
 const loader2 = document.getElementById("loader2");
 
+//---------------------------------------
+const rawFull = document.getElementById("raw-full");
+const btnraw = document.getElementById("btn-raw");
+const rawMax = document.getElementById("raw-max");
+
+const aiFull = document.getElementById("ai-full");
+const btnai = document.getElementById("btn-ai");
+const aiMax = document.getElementById("ai-max");
+//------------------------------------------
+rawMax.addEventListener("click", () => {
+  if (rawMax.textContent.includes("+")) {
+    rawMax.textContent = "-";
+  } else {
+    rawMax.textContent = "+";
+  }
+
+  if (rawFull.classList.contains("zoom")) {
+    rawFull.classList.remove("zoom");
+    rawPreview.style.maxHeight = "200px";
+    btnraw.style.position = "static";
+  } else {
+    rawFull.classList.add("zoom");
+    rawPreview.style.maxHeight = "100%";
+    rawPreview.style.overflow = "auto";
+    btnraw.style.position = "fixed";
+    btnraw.style.left = "5%";
+  }
+});
+
+aiMax.addEventListener("click", () => {
+  if (aiMax.textContent.includes("+")) {
+    aiMax.textContent = "-";
+  } else {
+    aiMax.textContent = "+";
+  }
+
+  if (aiFull.classList.contains("zoom")) {
+    aiFull.classList.remove("zoom");
+    aiPreview.style.maxHeight = "200px";
+    btnai.style.position = "static";
+  } else {
+    aiFull.classList.add("zoom");
+    aiPreview.style.maxHeight = "100%";
+    aiPreview.style.overflow = "auto";
+    btnai.style.position = "fixed";
+    btnai.style.left = "5%";
+  }
+});
+
 //---------------------------------------------
 ulink.addEventListener("input", () => {
   if (!ulink.value) {

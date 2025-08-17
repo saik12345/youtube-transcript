@@ -105,6 +105,11 @@ submitLink.addEventListener("click", async () => {
 });
 
 improve.addEventListener("click", async () => {
+  if (rawPreview.textContent.includes("Transcript will be")) {
+    console.log("no raw transcript");
+    return;
+  }
+  //-----------------------unchecked------------------------------
   loader2.removeAttribute("hidden");
   aiArea.textContent = "NO pdf yet..";
   aiPreview.textContent = "Transcript will be displayed here..";

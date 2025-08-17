@@ -16,6 +16,10 @@ ulink.addEventListener("input", () => {
   if (!ulink.value) {
     rawPreview.textContent = "Transcript will be displayed here....";
     aiPreview.textContent = "Transcript will be displayed here....";
+    rawArea.textContent = "NO pdf yet..";
+    aiArea.textContent = "NO pdf yet..";
+    downloadRawTranscript.classList.add("disabled-class");
+    downloadAiTranscript.classList.add("disabled-class");
   }
 });
 
@@ -52,12 +56,12 @@ submitLink.addEventListener("click", async () => {
     }
   );
   const response = await data.json();
+  console.log(response);
   if (response?.status === "failed" || response?.status === "error") {
     loader1.setAttribute("hidden", true);
     alert(`${response.message}`);
     return;
   }
-  console.log(response);
 
   if (response.status === "completed") {
     loader1.setAttribute("hidden", true);

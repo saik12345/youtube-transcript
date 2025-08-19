@@ -63,10 +63,10 @@ body {
   display: inline;
   width: 60%;
   height: 2rem;
-  padding: 0.2rem;
+  padding: 0.2rem 0.8rem;
   box-shadow: 2px 5px 2px;
   margin: 0.8rem 0rem;
-  font-family: cursive;
+  font-family: "Georgia", "Times New Roman", Times, serif;
   font-size: medium;
 }
 #linkarea button {

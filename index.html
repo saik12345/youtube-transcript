@@ -139,20 +139,25 @@
               margin: 1rem auto;
             "
           >
+          <div style="display: flex;justify-content: space-between;
+          background-color: black;border-radius: 1.5rem;align-items: center;height: 3rem;">
+
             <span
-              style="
-                background-color: black;
+            style="
+                background-color: blueviolet;
                 color: white;
                 padding: 0.5rem 1rem;
                 border-radius: 1.5rem;
                 font-size: small;
-                max-height: fit-content;
-              "
+                height: 1.5rem;
+                margin-left: 0.2rem;
+                "
               >Raw Transcript
             </span>
             <span id="loader1" class="loader" hidden></span>
-            <span id="download-rawtranscript">
+            <span id="download-rawtranscript" style="background-color: green;">
               <img src="pdf.png" /><span id="initial-raw">NO pdf yet..</span>
+            </div>
             </span>
             <!-- <span style="display: flex; align-items: center" id="raw-group">
               <button class="util">+</button>
@@ -188,21 +193,28 @@
               margin: 1rem auto;
             "
           >
-            <span
-              style="
-                background-color: black;
+          <!--ai-->
+           <div style="display: flex;justify-content: space-between;background-color: black;border-radius: 1.5rem;align-items: center;height: 3rem;">
+
+             <span
+             style="
+                background-color: blueviolet;
                 color: white;
                 padding: 0.5rem 1rem;
                 border-radius: 1.5rem;
                 font-size: small;
-                max-height: fit-content;
-              "
+                height: 1.5rem;
+                margin-left: 0.2rem;
+                "
               >AI Transcript</span
-            >
-            <span id="loader2" class="loader" hidden></span>
-            <span id="download-aitranscript">
-              <img src="pdf.png" /><span id="initial-ai">NO pdf yet..</span>
-            </span>
+              >
+              
+              
+              <span id="loader2" class="loader" hidden></span>
+              <span id="download-aitranscript" style="background-color: green;">
+                <img src="pdf.png" /><span id="initial-ai">NO pdf yet..</span>
+              </span>
+            </div>
           </p>
           <div id="ai-full" style="width: 100%; padding: 0.5rem">
             <p

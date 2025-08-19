@@ -109,12 +109,13 @@ body {
   width: fit-content;
   color: white;
   padding: 0.5rem 1rem;
-  border-radius: 3rem;
+  border-radius: 1.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-left: 0.5rem;
+  /* margin-left: -0.5rem; */
   font-size: small;
+  margin-right: 0.2rem;
 }
 #download-rawtranscript img {
   height: 1.5rem;
@@ -140,6 +141,7 @@ body {
   color: black;
   border-radius: 2rem;
   border: 2px solid white;
+  font-size: medium;
 }
 
 .loader {
@@ -152,6 +154,7 @@ body {
   /* position: absolute; */
   top: 50%;
   left: 50%;
+  transition: all 3 ease;
   /* margin: -25px 0 0 -25px; */
   /* z-index: 1000; */
 }
@@ -185,6 +188,7 @@ body {
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); /* Nice shadow */
   border-radius: 12px;
   padding: 0.5rem 1rem;
+  transition: all 0.3s ease;
   /* Rounded corners */
   /* overflow-y: auto; */
   /* display: flex; Optional: center contents */

@@ -61,6 +61,11 @@ aiMax.addEventListener("click", () => {
 });
 
 //---------------------------------------------
+const deleteLink = document.getElementById("delete");
+deleteLink?.addEventListener("click", () => {
+  ulink.value = "";
+  deleteLink.setAttribute("hidden", true);
+});
 ulink.addEventListener("input", () => {
   if (!ulink.value) {
     rawPreview.textContent = "Transcript will be displayed here....";
@@ -69,6 +74,10 @@ ulink.addEventListener("input", () => {
     aiArea.textContent = "NO pdf yet..";
     downloadRawTranscript.classList.add("disabled-class");
     downloadAiTranscript.classList.add("disabled-class");
+    deleteLink.setAttribute("hidden", true);
+  }
+  if (ulink.value) {
+    deleteLink.removeAttribute("hidden");
   }
 });
 

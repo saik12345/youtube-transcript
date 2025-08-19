@@ -61,7 +61,7 @@ body {
 }
 #linkarea input {
   display: inline;
-  width: 60%;
+  width: 80%;
   height: 2rem;
   padding: 0.2rem 0.8rem;
   box-shadow: 2px 5px 2px;
@@ -71,6 +71,7 @@ body {
 }
 #linkarea button {
   margin-left: 1rem;
+  width: fit-content;
   padding: 0.8rem 1rem;
   border-radius: 1rem;
   /* background-color: #2a52be; */

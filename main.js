@@ -20,6 +20,10 @@ const aiFull = document.getElementById("ai-full");
 // const btnai = document.getElementById("btn-ai");
 const aiMax = document.getElementById("ai-max");
 //------------------------------------------
+
+downloadAiTranscript.classList.add("disabled-class");
+downloadRawTranscript.classList.add("disabled-class");
+
 rawMax.addEventListener("click", () => {
   if (rawMax.textContent.includes("+")) {
     rawMax.textContent = "-";
@@ -30,11 +34,14 @@ rawMax.addEventListener("click", () => {
   if (rawFull.classList.contains("zoom")) {
     rawFull.classList.remove("zoom");
     rawPreview.style.maxHeight = "200px";
+    // rawPreview.style.userSelect = "text";
+    rawPreview.style.userSelect = "none";
     // btnraw.style.position = "static";
   } else {
     rawFull.classList.add("zoom");
     rawPreview.style.maxHeight = "100%";
-    rawPreview.style.overflow = "auto";
+    // rawPreview.style.overflow = "auto";
+    rawPreview.style.userSelect = "text";
     // btnraw.style.position = "fixed";
     // btnraw.style.left = "5%";
   }
@@ -50,11 +57,13 @@ aiMax.addEventListener("click", () => {
   if (aiFull.classList.contains("zoom")) {
     aiFull.classList.remove("zoom");
     aiPreview.style.maxHeight = "200px";
+    aiPreview.style.userSelect = "none";
     // btnai.style.position = "static";
   } else {
     aiFull.classList.add("zoom");
     aiPreview.style.maxHeight = "100%";
-    aiPreview.style.overflow = "auto";
+    // aiPreview.style.overflow = "auto";
+    aiPreview.style.userSelect = "text";
     // btnai.style.position = "fixed";
     // btnai.style.left = "5%";
   }
@@ -82,8 +91,8 @@ ulink.addEventListener("input", () => {
 });
 
 // rawArea.setAttribute("disabled");
-downloadAiTranscript.classList.add("disabled-class");
-downloadRawTranscript.classList.add("disabled-class");
+// downloadAiTranscript.classList.add("disabled-class");
+// downloadRawTranscript.classList.add("disabled-class");
 
 submitLink.addEventListener("click", async () => {
   downloadRawTranscript.classList.add("disabled-class");

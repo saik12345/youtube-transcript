@@ -7,6 +7,7 @@ body {
   /* background-color: #4b9cd3; */
   /* background-color: #007fff; */
   background-color: #1877f2;
+  user-select: none;
 }
 #logo {
   display: flex;
@@ -93,7 +94,7 @@ body {
 #preview-ai {
   width: 95%;
   border: 1px solid black;
-  padding: 0.5rem;
+  padding: 1rem;
   line-height: 1.6;
   margin: 0.1rem auto;
   overflow: auto;
@@ -102,6 +103,7 @@ body {
   font-size: medium;
   font-family: "Georgia", "Times New Roman", Times, serif;
   max-height: 200px;
+  user-select: none;
 }
 #download-rawtranscript,
 #download-aitranscript {

@@ -102,6 +102,23 @@ submitLink.addEventListener("click", async () => {
   aiArea.textContent = "NO pdf yet..";
   // rawArea.setAttribute("disabled");
   // aiArea.setAttribute("disabled");
+
+  async function fetchRawTranscript() {
+    let data = await fetch(
+      "https://transcript-backend-mwnc.onrender.com/getTranscription",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          reqUrl: ulink.value,
+        }),
+      }
+    );
+    return data;
+  }
+
   console.log(ulink.value);
   if (!ulink.value) {
     alert("No link provided");
@@ -110,24 +127,16 @@ submitLink.addEventListener("click", async () => {
 
   loader1.removeAttribute("hidden");
 
-  const data = await fetch(
-    "https://transcript-backend-mwnc.onrender.com/getTranscription",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        reqUrl: ulink.value,
-      }),
-    }
-  );
-  const response = await data.json();
+  let data = await fetchRawTranscript();
+  let response = await data.json();
   console.log(response);
-  if (response?.status === "failed" || response?.status === "error") {
-    loader1.setAttribute("hidden", true);
+
+  while (response?.status === "error" && response?.code === 429) {
+    // loader1.setAttribute("hidden", true);
     alert(`${response.message}`);
-    return;
+    alert("Dont worry.System will retry in 3sec. Hold back and wait");
+    data = await fetchRawTranscript();
+    response = await data.json();
   }
 
   if (response.status === "completed") {
@@ -136,6 +145,12 @@ submitLink.addEventListener("click", async () => {
     rawArea.innerHTML = "Download ready";
     rawPreview.innerHTML = `${response?.transcript}`;
   }
+
+  if (response.status === "error" || response.status === "failed") {
+    loader1.setAttribute("hidden", true);
+    alert(`${response.message}`);
+  }
+
   downloadRawTranscript.addEventListener("click", async () => {
     if (response.status === "completed") {
       const pdfres = await fetch(

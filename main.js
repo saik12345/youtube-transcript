@@ -132,7 +132,10 @@ submitLink.addEventListener("click", async () => {
   console.log(response);
   console.log(response.code);
 
-  while (response?.status === "error" && response?.code === 429) {
+  while (
+    response?.status === "error" &&
+    response?.code.includes("limit-exceeded")
+  ) {
     // loader1.setAttribute("hidden", true);
     alert(`${response.message}`);
     alert("Dont worry.System will retry in 3sec. Hold back and wait");

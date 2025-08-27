@@ -130,6 +130,7 @@ submitLink.addEventListener("click", async () => {
   let data = await fetchRawTranscript();
   let response = await data.json();
   console.log(response);
+  console.log(response.code);
 
   while (response?.status === "error" && response?.code === 429) {
     // loader1.setAttribute("hidden", true);

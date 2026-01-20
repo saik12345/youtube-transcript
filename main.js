@@ -283,7 +283,7 @@ improve.addEventListener("click", async () => {
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    const title
+    
     // Filename
     a.download = `AItranscript-${title.toUpperCase()}.pdf`;
     document.body.appendChild(a);

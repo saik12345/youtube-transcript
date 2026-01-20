@@ -122,7 +122,7 @@ submitLink.addEventListener("click", async () => {
       }
     );
 
-    title=await fetch( "https://transcript-backend-mwnc.onrender.com/videoTitle",{
+    let titleResponse=await fetch( "https://transcript-backend-mwnc.onrender.com/videoTitle",{
       method:"POST",
       headers:{
         "Content-Type":"application/json",
@@ -131,7 +131,8 @@ submitLink.addEventListener("click", async () => {
         url:ulink.value,
       })
     });
-    
+    titleData=await titleResponse.json();
+    title=titleData?.title;
     return data;
   }
 

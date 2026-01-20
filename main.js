@@ -21,6 +21,11 @@ const aiFull = document.getElementById("ai-full");
 const aiMax = document.getElementById("ai-max");
 //------------------------------------------
 
+
+let title='';
+
+/-------------------------------------------
+
 downloadAiTranscript.classList.add("disabled-class");
 downloadRawTranscript.classList.add("disabled-class");
 
@@ -116,6 +121,17 @@ submitLink.addEventListener("click", async () => {
         }),
       }
     );
+
+    title=await fetch( "https://transcript-backend-mwnc.onrender.com/videoTitle",{
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json",
+      },
+      body:JSON.stringify({
+        url:ulink.value,
+      })
+    });
+    
     return data;
   }
 
@@ -269,7 +285,7 @@ improve.addEventListener("click", async () => {
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-
+    const title
     // Filename
     a.download = `AItranscript-${new Date()
       .toLocaleDateString("en-GB")

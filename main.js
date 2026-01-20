@@ -24,7 +24,7 @@ const aiMax = document.getElementById("ai-max");
 
 let title='';
 
-/-------------------------------------------
+//-------------------------------------------
 
 downloadAiTranscript.classList.add("disabled-class");
 downloadRawTranscript.classList.add("disabled-class");

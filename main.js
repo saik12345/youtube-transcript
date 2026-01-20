@@ -193,9 +193,7 @@ submitLink.addEventListener("click", async () => {
       a.href = url;
 
       // Filename
-      a.download = `RawTranscript-${new Date()
-        .toLocaleDateString("en-GB")
-        .replace(/\//g, "-")}.pdf`;
+      a.download = `RawTranscript-${title.toUpperCase()}.pdf`;
       document.body.appendChild(a);
       a.click();
 
@@ -287,9 +285,7 @@ improve.addEventListener("click", async () => {
     a.href = url;
     const title
     // Filename
-    a.download = `AItranscript-${new Date()
-      .toLocaleDateString("en-GB")
-      .replace(/\//g, "-")}.pdf`;
+    a.download = `AItranscript-${title.toUpperCase()}.pdf`;
     document.body.appendChild(a);
     a.click();
 

@@ -15,7 +15,7 @@ body {
   justify-content: left;
   margin-top: 1rem;
   width: 100%;
-  background-url:url('cgpt.png');
+  background-image:url('cgpt.png');
   background-size: cover;      /* fill area */
   background-position: center; /* center image */
   background-repeat: no-repeat;

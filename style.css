@@ -13,7 +13,7 @@ body {
   display: flex;
   text-align: center;
   justify-content: left;
-  margin-top: 1rem;
+  /* margin-top: 1rem; */
   width: 100%;
   background-image:url('cgpt.png');
   background-size: cover;      /* fill area */

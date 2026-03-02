@@ -170,7 +170,7 @@ submitLink.addEventListener("click", async () => {
 
   if (response.status === "error" || response.status === "failed") {
     loader1.setAttribute("hidden", true);
-    alert("There may be a problem with the url . Please try again by refreshing the page and copying the url !");
+    alert(`${response.message}`);
   }
 
   downloadRawTranscript.addEventListener("click", async () => {

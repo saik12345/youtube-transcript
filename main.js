@@ -148,9 +148,7 @@ submitLink.addEventListener("click", async () => {
   let response = await data.json();
   console.log(response);
   console.log(response.code);
-  if(response?.status=="error"){
-    alert("There may be a problem with the url . Please try again by refreshing the page and copying the url !");
-  }
+ 
 
   while (
     response?.status === "error" &&
@@ -172,7 +170,7 @@ submitLink.addEventListener("click", async () => {
 
   if (response.status === "error" || response.status === "failed") {
     loader1.setAttribute("hidden", true);
-    alert(`${response.message}`);
+    alert("There may be a problem with the url . Please try again by refreshing the page and copying the url !");
   }
 
   downloadRawTranscript.addEventListener("click", async () => {

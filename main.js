@@ -145,6 +145,7 @@ submitLink.addEventListener("click", async () => {
   loader1.removeAttribute("hidden");
 
   let data = await fetchRawTranscript();
+  console.log(data);
   let response = await data.json();
   console.log(response);
   console.log(response.code);

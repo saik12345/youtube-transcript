@@ -214,8 +214,8 @@ improve.addEventListener("click", async () => {
   }
   //-----------------------unchecked------------------------------
   loader2.removeAttribute("hidden");
-  aiArea.textContent = "NO pdf yet..";
-  aiPreview.textContent = "Transcript will be displayed here..";
+  // aiArea.textContent = "NO pdf yet..";
+  // aiPreview.textContent = "Transcript will be displayed here..";
   const response = await fetch(
     "https://transcript-backend-mwnc.onrender.com/streamaitranscript",
     {
@@ -234,8 +234,8 @@ improve.addEventListener("click", async () => {
   } else {
     aiPreview.textContent = "";
   }
-  // const response = await data.json();
-  // console.log(response);
+  const response = await data.json();
+  console.log(response);
 
   const reader = response.body.getReader();
   const decoder = new TextDecoder("utf-8");

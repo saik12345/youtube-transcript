@@ -234,7 +234,7 @@ improve.addEventListener("click", async () => {
   } else {
     aiPreview.textContent = "";
   }
-  const response = await data.json();
+  // const response = await data.json();
   console.log(response);
 
   const reader = response.body.getReader();

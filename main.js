@@ -248,6 +248,7 @@ improve.addEventListener("click", async () => {
       downloadAiTranscript.classList.remove("disabled-class");
       break;
     }
+    console.log(decoder.decode(value, { stream: true }));
     aiPreview.textContent += decoder.decode(value, { stream: true });
   }
 

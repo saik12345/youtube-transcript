@@ -235,7 +235,7 @@ improve.addEventListener("click", async () => {
     aiPreview.textContent = "";
   }
   // const response = await data.json();
-  console.log(response);
+  // console.log(response);
 
   const reader = response.body.getReader();
   const decoder = new TextDecoder("utf-8");
@@ -250,6 +250,7 @@ improve.addEventListener("click", async () => {
     }
     console.log(decoder.decode(value, { stream: true }));
     aiPreview.textContent += decoder.decode(value, { stream: true });
+    await new Promise(requestAnimationFrame);
   }
 
   if (response.status === "error") {
